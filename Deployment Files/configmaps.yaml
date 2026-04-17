@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: bestbuy
+data:
+  RABBITMQ_HOST: "rabbitmq"           # K8s Service name — DNS resolves within the cluster
+  RABBITMQ_PORT: "5672"
+  MONGO_HOST: "mongodb"               # K8s Service name for MongoDB
+  MONGO_PORT: "27017"
+  ORDER_SERVICE_URL: "http://order-service:3000"
+  PRODUCT_SERVICE_URL: "http://product-service:8080"
+  AI_SERVICE_URL: "http://ai-service:5000"
+  MAKELINE_SERVICE_URL: "http://makeline-service:8081"

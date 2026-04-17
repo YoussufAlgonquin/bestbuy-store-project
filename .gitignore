@@ -1,0 +1,7 @@
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfvars     # Never commit real variable values
+!terraform/*.tfvars.example
+
+"Deployment Files/*.yaml"
