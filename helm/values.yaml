@@ -10,8 +10,8 @@ image:
 secrets:
   mongoUri: "mongodb://mongodb:27017/bestbuy"
   rabbitmqUri: "amqp://guest:guest@rabbitmq:5672"
-  azureOpenaiApiKey: "REMOVED_API_KEY"
-  azureOpenaiEndpoint: "https://REMOVED_ENDPOINT.services.ai.azure.com/"
+  azureOpenaiApiKey: ""        # Override at deploy time: --set secrets.azureOpenaiApiKey=...
+  azureOpenaiEndpoint: ""      # Override at deploy time: --set secrets.azureOpenaiEndpoint=...
   azureOpenaiDeployment: "gpt-4o"
 
 productService:

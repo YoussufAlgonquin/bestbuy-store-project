@@ -5,3 +5,6 @@ terraform/*.tfvars     # Never commit real variable values
 !terraform/*.tfvars.example
 
 "Deployment Files/"
+
+# Secret override files — never commit real credentials
+helm/values.secret.yaml
