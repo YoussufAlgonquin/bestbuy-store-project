@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-service
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.aiService.replicas }}
+  selector:
+    matchLabels:
+      app: ai-service
+  template:
+    metadata:
+      labels:
+        app: ai-service
+    spec:
+      containers:
+        - name: ai-service
+          image: {{ .Values.image.registry }}/bestbuy-ai-service:{{ .Values.image.tag }}
+          ports:
+            - containerPort: {{ .Values.aiService.port }}
+          env:
+            - name: AZURE_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: AZURE_OPENAI_API_KEY
+            - name: AZURE_OPENAI_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: AZURE_OPENAI_ENDPOINT
+            - name: AZURE_OPENAI_DEPLOYMENT
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: AZURE_OPENAI_DEPLOYMENT
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.aiService.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.aiService.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "300m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: ai-service
+  ports:
+    - port: {{ .Values.aiService.port }}
+      targetPort: {{ .Values.aiService.port }}
+  type: ClusterIP

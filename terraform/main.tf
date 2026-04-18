@@ -18,17 +18,6 @@ resource "azurerm_resource_group" "main" {
   location = var.location
 }
 
-#Private Docker registry
-#CI/CD pipelines push images here, AKS pulls from here
-#Using this instead of docker hub = faster pulls + no rate limits + managed identity
-resource "azurerm_container_registry" "acr" {
-  name                = var.acr_name
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  sku                 = "Basic"
-  admin_enabled       = true
-}
-
 
 #AKS
 resource "azurerm_kubernetes_cluster" "aks" {
@@ -72,9 +61,3 @@ resource "azurerm_log_analytics_workspace" "main" {
   retention_in_days   = 30
 }
 
-resource "azurerm_role_assignment" "ask_acr_pull" {
-  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-  role_definition_name             = "AcrPull"
-  scope                            = azurerm_container_registry.acr.id
-  skip_service_principal_aad_check = true
-}

@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: product-service
-  namespace: bestbuy
+  namespace: {{ .Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.productService.replicas }}
   selector:
     matchLabels:
       app: product-service
@@ -12,12 +12,16 @@ spec:
     metadata:
       labels:
         app: product-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
     spec:
       containers:
         - name: product-service
-          image: youssufalgonquin/bestbuy-product-service:latest
+          image: {{ .Values.image.registry }}/bestbuy-product-service:{{ .Values.image.tag }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.productService.port }}
           env:
             - name: MONGO_URI
               valueFrom:
@@ -30,19 +34,18 @@ spec:
                   name: app-secrets
                   key: MONGO_URI
             - name: PORT
-              value: "8080"
-          # Spring Actuator provides these endpoints automatically
+              value: "{{ .Values.productService.port }}"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: 8080
-            initialDelaySeconds: 30   # JVM startup takes longer than Go/Node
+              port: {{ .Values.productService.port }}
+            initialDelaySeconds: 30
             periodSeconds: 15
             failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: 8080
+              port: {{ .Values.productService.port }}
             initialDelaySeconds: 20
             periodSeconds: 10
           resources:
@@ -57,11 +60,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: product-service
-  namespace: bestbuy
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     app: product-service
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: {{ .Values.productService.port }}
+      targetPort: {{ .Values.productService.port }}
   type: ClusterIP

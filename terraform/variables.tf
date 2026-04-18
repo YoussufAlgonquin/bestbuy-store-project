@@ -28,12 +28,6 @@ variable "node_vm_size" {
   default     = "Standard_B2s_v2"
 }
 
-variable "acr_name" {
-  description = "Azure container registry name (globally unique)"
-  type        = string
-  default     = "bestbuystoreyoussuf"
-}
-
 variable "subscription_id" {
   type        = string
   description = "The Azure subscription ID"

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: {{ .Values.namespace }}
+data:
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672"
+  MONGO_HOST: "mongodb"
+  MONGO_PORT: "27017"
+  ORDER_SERVICE_URL: "http://order-service:{{ .Values.orderService.port }}"
+  PRODUCT_SERVICE_URL: "http://product-service:{{ .Values.productService.port }}"
+  AI_SERVICE_URL: "http://ai-service:{{ .Values.aiService.port }}"
+  MAKELINE_SERVICE_URL: "http://makeline-service:{{ .Values.makelineService.port }}"

@@ -1,0 +1,48 @@
+namespace: bestbuy
+
+image:
+  registry: youssufalgonquin
+  tag: latest
+
+# Plain-text secret values — Helm will base64-encode them when rendering the Secret.
+# Override these at deploy time: --set secrets.mongoUri="mongodb://..."
+# Never commit real values to git.
+secrets:
+  mongoUri: "mongodb://mongodb:27017/bestbuy"
+  rabbitmqUri: "amqp://guest:guest@rabbitmq:5672"
+  azureOpenaiApiKey: "REMOVED_API_KEY"
+  azureOpenaiEndpoint: "https://REMOVED_ENDPOINT.services.ai.azure.com/"
+  azureOpenaiDeployment: "gpt-4o"
+
+productService:
+  replicas: 1
+  port: 8080
+
+orderService:
+  replicas: 1
+  port: 3000
+
+makelineService:
+  replicas: 1
+  port: 8081
+
+aiService:
+  replicas: 1
+  port: 5000
+
+storeFront:
+  replicas: 1
+  port: 80
+
+storeAdmin:
+  replicas: 1
+  port: 80
+
+mongodb:
+  storageSize: 5Gi
+
+hpa:
+  orderService:
+    minReplicas: 1
+    maxReplicas: 5
+    cpuThreshold: 50

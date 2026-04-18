@@ -3,4 +3,3 @@ location = "canadacentral"
 cluster_name = "bestbuy-aks"
 node_count = 2
 node_vm_size = "Standard_B2s"
-acr_name = "bestbuystore_youssuf"
